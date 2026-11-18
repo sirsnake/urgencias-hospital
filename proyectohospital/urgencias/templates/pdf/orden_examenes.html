@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Orden de Exámenes</title>
+    <style>
+        @page {
+            size: letter;
+            margin: 2cm 1.5cm;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 10pt;
+            line-height: 1.4;
+            color: #000;
+        }
+        
+        /* HEADER */
+        .header {
+            border-bottom: 3px solid #7c3aed;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .header-top {
+            display: table;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .header-left {
+            display: table-cell;
+            width: 70%;
+            vertical-align: top;
+        }
+        .header-right {
+            display: table-cell;
+            width: 30%;
+            vertical-align: top;
+            text-align: right;
+        }
+        .hospital-name {
+            font-size: 16pt;
+            font-weight: bold;
+            color: #7c3aed;
+            margin-bottom: 3px;
+        }
+        .department {
+            font-size: 11pt;
+            color: #475569;
+            font-weight: 600;
+        }
+        .hospital-address {
+            font-size: 8pt;
+            color: #64748b;
+            margin-top: 5px;
+        }
+        .document-title {
+            font-size: 20pt;
+            font-weight: bold;
+            color: #7c3aed;
+            text-align: center;
+            margin: 15px 0 10px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .document-info {
+            text-align: center;
+            font-size: 9pt;
+            color: #64748b;
+            margin-bottom: 20px;
+        }
+        
+        /* MÉDICO INFO BOX */
+        .medico-box {
+            background: #faf5ff;
+            border: 1px solid #c4b5fd;
+            border-left: 4px solid #7c3aed;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 3px;
+        }
+        .medico-box p {
+            margin: 4px 0;
+            font-size: 9.5pt;
+            color: #1e293b;
+        }
+        .medico-box strong {
+            color: #5b21b6;
+        }
+        
+        /* SECCIONES */
+        .section {
+            margin-bottom: 18px;
+            page-break-inside: avoid;
+        }
+        .section-header {
+            background: #f1f5f9;
+            border-left: 4px solid #7c3aed;
+            padding: 8px 12px;
+            font-size: 11pt;
+            font-weight: bold;
+            color: #1e293b;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* TABLA DE DATOS */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+        .data-table td {
+            padding: 6px 10px;
+            border: 1px solid #e2e8f0;
+            font-size: 9.5pt;
+        }
+        .data-table td.label {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #475569;
+            width: 30%;
+        }
+        .data-table td.value {
+            background: #fff;
+            color: #0f172a;
+        }
+        
+        /* CAJA DE EXÁMENES */
+        .examenes-container {
+            background: #fff;
+            border: 2px solid #7c3aed;
+            padding: 20px;
+            min-height: 200px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .examenes-title {
+            font-size: 12pt;
+            font-weight: bold;
+            color: #5b21b6;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .examen-item {
+            background: #faf5ff;
+            border-left: 3px solid #7c3aed;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-radius: 3px;
+        }
+        .examen-item h4 {
+            color: #5b21b6;
+            font-size: 11pt;
+            margin-bottom: 5px;
+        }
+        .examen-item p {
+            font-size: 9pt;
+            color: #475569;
+            margin-top: 5px;
+            line-height: 1.5;
+        }
+        .examen-urgente {
+            background: #fef2f2;
+            border-left-color: #dc2626;
+        }
+        .examen-urgente h4 {
+            color: #991b1b;
+        }
+        .examen-urgente::before {
+            content: "⚠️ URGENTE - ";
+            font-weight: bold;
+            color: #991b1b;
+        }
+        
+        /* DIAGNÓSTICO BOX */
+        .diagnosis-box {
+            background: #eff6ff;
+            border: 1px solid #93c5fd;
+            padding: 12px;
+            border-radius: 3px;
+            margin-bottom: 15px;
+        }
+        .diagnosis-box strong {
+            color: #1e40af;
+            font-size: 10pt;
+        }
+        
+        /* INDICACIONES BOX */
+        .indicaciones-box {
+            background: #fefce8;
+            border: 1px solid #fde047;
+            border-left: 4px solid #eab308;
+            padding: 12px;
+            border-radius: 3px;
+            margin-top: 15px;
+        }
+        .indicaciones-box h4 {
+            color: #854d0e;
+            font-size: 10pt;
+            margin-bottom: 8px;
+        }
+        .indicaciones-box p {
+            font-size: 9.5pt;
+            color: #1e293b;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+        
+        /* INSTRUCCIONES */
+        .instructions {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            padding: 12px;
+            margin: 20px 0;
+            border-radius: 3px;
+        }
+        .instructions h4 {
+            color: #0369a1;
+            font-size: 10pt;
+            margin-bottom: 8px;
+        }
+        .instructions ul {
+            margin-left: 20px;
+            font-size: 9pt;
+            color: #475569;
+        }
+        .instructions li {
+            margin: 4px 0;
+        }
+        
+        /* FIRMA */
+        .signature-section {
+            margin-top: 50px;
+            text-align: center;
+        }
+        .signature-line {
+            border-top: 2px solid #1e293b;
+            width: 300px;
+            margin: 0 auto 10px;
+        }
+        .signature-section p {
+            font-size: 9pt;
+            color: #1e293b;
+            margin: 3px 0;
+        }
+        
+        /* FOOTER */
+        .footer {
+            position: fixed;
+            bottom: 1cm;
+            left: 1.5cm;
+            right: 1.5cm;
+            text-align: center;
+            font-size: 7pt;
+            color: #94a3b8;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 8px;
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <div class="header">
+        <div class="header-top">
+            <div class="header-left">
+                <div class="hospital-name">Hospital General</div>
+                <div class="department">Laboratorio Clínico y Exámenes</div>
+                <div class="hospital-address">Av. Principal 1234, Santiago, Chile | Tel: +56 2 2345 6789</div>
+            </div>
+            <div class="header-right">
+                <div style="font-size: 9pt; color: #64748b;">N° Orden</div>
+                <div style="font-size: 16pt; font-weight: bold; color: #7c3aed;">ORD-{{ ficha.id }}</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="document-title">Orden de Exámenes</div>
+    <div class="document-info">Fecha de Emisión: {{ fecha_actual }}</div>
+    
+    <!-- MÉDICO SOLICITANTE -->
+    <div class="medico-box">
+        <p><strong>Médico Solicitante:</strong> Dr(a). {{ medico.nombre }}</p>
+        <p><strong>RUT:</strong> {{ medico.rut }}</p>
+        {% if medico.especialidad %}
+        <p><strong>Especialidad:</strong> {{ medico.especialidad }}</p>
+        {% endif %}
+        {% if medico.registro_profesional %}
+        <p><strong>Registro Profesional:</strong> {{ medico.registro_profesional }}</p>
+        {% endif %}
+    </div>
+    
+    <!-- DATOS DEL PACIENTE -->
+    <div class="section">
+        <div class="section-header">Datos del Paciente</div>
+        <table class="data-table">
+            <tr>
+                <td class="label">Nombre Completo:</td>
+                <td class="value">
+                    {% if paciente %}
+                        {{ paciente.nombre }}
+                    {% else %}
+                        PACIENTE NN
+                    {% endif %}
+                </td>
+                <td class="label">RUT:</td>
+                <td class="value">
+                    {% if paciente and paciente.rut %}
+                        {{ paciente.rut }}
+                    {% else %}
+                        Sin RUT
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td class="label">Edad:</td>
+                <td class="value">
+                    {% if paciente %}
+                        {{ paciente.edad }} años
+                    {% else %}
+                        Desconocida
+                    {% endif %}
+                </td>
+                <td class="label">Sexo:</td>
+                <td class="value">
+                    {% if paciente %}
+                        {{ paciente.get_sexo_display }}
+                    {% else %}
+                        No especificado
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td class="label">Previsión:</td>
+                <td class="value">
+                    {% if paciente and paciente.prevision %}
+                        {{ paciente.prevision }}
+                    {% else %}
+                        No especificada
+                    {% endif %}
+                </td>
+                <td class="label">N° Ficha:</td>
+                <td class="value">{{ ficha.id }}</td>
+            </tr>
+        </table>
+    </div>
+    
+    <!-- DIAGNÓSTICO -->
+    <div class="section">
+        <div class="section-header">Diagnóstico Presuntivo</div>
+        <div class="diagnosis-box">
+            <strong>{{ diagnostico.diagnostico_cie10 }}</strong>
+            {% if diagnostico.descripcion %}
+            <p style="margin-top: 8px; font-size: 9.5pt; color: #475569;">{{ diagnostico.descripcion }}</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- EXÁMENES SOLICITADOS -->
+    <div class="section">
+        <div class="examenes-container">
+            <div class="examenes-title">Exámenes Solicitados</div>
+            
+            {% if examenes_list %}
+                {% for examen in examenes_list %}
+                <div class="examen-item {% if examen.urgente %}examen-urgente{% endif %}">
+                    <h4>{{ examen.nombre }}</h4>
+                    {% if examen.indicaciones %}
+                    <p>{{ examen.indicaciones }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            {% else %}
+                <p style="font-size: 10pt; color: #475569; white-space: pre-wrap;">{{ examenes_texto|default:"Ver indicaciones médicas" }}</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- INDICACIONES CLÍNICAS -->
+    {% if diagnostico.indicaciones_medicas %}
+    <div class="section">
+        <div class="indicaciones-box">
+            <h4>Indicaciones Clínicas</h4>
+            <p>{{ diagnostico.indicaciones_medicas }}</p>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- INSTRUCCIONES PARA EL PACIENTE -->
+    <div class="instructions">
+        <h4>Instrucciones Importantes</h4>
+        <ul>
+            <li>Presentarse con <strong>8 horas de ayuno</strong> para exámenes de laboratorio</li>
+            <li>Traer documento de identidad y orden médica</li>
+            <li>Esta orden tiene validez de <strong>30 días</strong> desde la fecha de emisión</li>
+            <li>Presentarse en horario de atención: Lunes a Viernes 08:00 - 16:00 hrs</li>
+        </ul>
+    </div>
+    
+    <!-- FIRMA -->
+    <div class="signature-section">
+        <div class="signature-line"></div>
+        <p><strong>Dr(a). {{ medico.nombre }}</strong></p>
+        <p>RUT: {{ medico.rut }}</p>
+        {% if medico.registro_profesional %}
+        <p>Registro: {{ medico.registro_profesional }}</p>
+        {% endif %}
+    </div>
+    
+    <!-- FOOTER -->
+    <div class="footer">
+        <p>Hospital General - Laboratorio Clínico | Documento oficial</p>
+        <p>Orden válida por 30 días | Generado el {{ fecha_actual }}</p>
+    </div>
+</body>
+</html>
