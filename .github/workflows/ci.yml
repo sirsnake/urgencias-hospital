@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  frontend:
+    name: Frontend (type-check + build)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci --no-audit --no-fund
+      - run: npm run build
+
+  backend:
+    name: Backend (Django checks)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: ci-root
+          MYSQL_DATABASE: hospital
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -pci-root"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+    env:
+      DJANGO_SECRET_KEY: ci-only-not-a-secret
+      DB_NAME: hospital
+      DB_USER: root
+      DB_PASSWORD: ci-root
+      DB_HOST: 127.0.0.1
+      DB_PORT: "3306"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: System libraries
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends pkg-config libmysqlclient-dev
+      - run: pip install -r requirements.txt
+      - name: Django system check
+        working-directory: proyectohospital
+        run: python manage.py check
+      - name: No missing migrations
+        working-directory: proyectohospital
+        run: python manage.py makemigrations --check --dry-run
+      - name: Apply migrations
+        working-directory: proyectohospital
+        run: python manage.py migrate --noinput

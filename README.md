@@ -1,9 +1,10 @@
 # 🏥 Sistema de Gestión de Urgencias Hospitalarias
 
+[![CI](https://github.com/sirsnake/urgencias-hospital/actions/workflows/ci.yml/badge.svg)](https://github.com/sirsnake/urgencias-hospital/actions/workflows/ci.yml)
 [![Django](https://img.shields.io/badge/Django-5.2-green.svg)](https://www.djangoproject.com/)
-[![React](https://img.shields.io/badge/React-19-blue.svg)](https://reactjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.6-blue.svg)](https://www.typescriptlang.org/)
-[![Vite](https://img.shields.io/badge/Vite-6.0-purple.svg)](https://vitejs.dev/)
+[![React](https://img.shields.io/badge/React-19-blue.svg)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue.svg)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-7-purple.svg)](https://vitejs.dev/)
 
 Sistema integral de gestión de urgencias médicas hospitalarias con flujo completo desde la atención pre-hospitalaria hasta el alta del paciente. Desarrollado con Django REST Framework y React + TypeScript.
 
