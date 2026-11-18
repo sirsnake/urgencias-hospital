@@ -1,5 +1,5 @@
 # Django y Framework
-Django>=5.2.8
+Django>=5.2.8,<6
 djangorestframework>=3.15.0
 
 # Base de datos MySQL
